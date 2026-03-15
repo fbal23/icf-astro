@@ -1,0 +1,130 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Hero from "../../components/Hero.astro";
+import CoachCard from "../../components/CoachCard.astro";
+import { getCollection } from "astro:content";
+
+const coaches = (await getCollection("coach")).filter(
+  (c) => c.data.consent_public !== false
+);
+
+// Build filter options from actual data
+const credentials = [...new Set(coaches.map((c) => c.data.credential_level).filter(Boolean))].sort();
+const regions = [...new Set(coaches.map((c) => c.data.region).filter(Boolean))].sort();
+const languages = [...new Set(coaches.flatMap((c) => c.data.languages || []))].sort();
+---
+
+<BaseLayout title="Find en Coach" description="Find en ICF-certificeret coach i Danmark. Søg efter certificeringsniveau, region, sprog og speciale.">
+  <Hero
+    title="Find en Coach"
+    subtitle="Browse ICF Danmarks member-coaches. Alle coaches er betalende medlemmer af ICF Danmark."
+  />
+
+  <section class="max-w-[1100px] mx-auto px-6 py-12">
+    <!-- Filters -->
+    <div class="bg-icf-light rounded-lg p-6 mb-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <label for="filter-credential" class="block text-sm font-medium text-icf-dark mb-1">Niveau</label>
+          <select id="filter-credential" class="w-full rounded-lg border border-icf-border text-sm p-2 bg-white">
+            <option value="">Alle</option>
+            {credentials.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="filter-region" class="block text-sm font-medium text-icf-dark mb-1">Region</label>
+          <select id="filter-region" class="w-full rounded-lg border border-icf-border text-sm p-2 bg-white">
+            <option value="">Alle</option>
+            {regions.map((r) => <option value={r}>{r}</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="filter-language" class="block text-sm font-medium text-icf-dark mb-1">Sprog</label>
+          <select id="filter-language" class="w-full rounded-lg border border-icf-border text-sm p-2 bg-white">
+            <option value="">Alle</option>
+            {languages.map((l) => <option value={l}>{l.toUpperCase()}</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="filter-search" class="block text-sm font-medium text-icf-dark mb-1">Søg</label>
+          <input
+            id="filter-search"
+            type="text"
+            placeholder="Navn eller speciale..."
+            class="w-full rounded-lg border border-icf-border text-sm p-2 bg-white"
+          />
+        </div>
+      </div>
+      <p id="filter-count" class="text-sm text-icf-excerpt mt-4">{coaches.length} coaches fundet</p>
+    </div>
+
+    <!-- Coach grid — 3 columns matching WordPress -->
+    <div id="coach-grid" class="grid md:grid-cols-3 gap-8">
+      {coaches.map((coach) => (
+        <div
+          class="coach-item"
+          data-credential={coach.data.credential_level || ""}
+          data-region={coach.data.region || ""}
+          data-languages={(coach.data.languages || []).join(",")}
+          data-specialties={(coach.data.specialties || []).join(",")}
+          data-name={coach.data.name.toLowerCase()}
+        >
+          <CoachCard
+            name={coach.data.name}
+            credential_level={coach.data.credential_level}
+            region={coach.data.region}
+            languages={coach.data.languages}
+            specialties={coach.data.specialties}
+            coaching_approach={coach.data.coaching_approach}
+            photo={coach.data.photo}
+            slug={coach.id}
+          />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script>
+    function setupFilters() {
+      const grid = document.getElementById("coach-grid");
+      const countEl = document.getElementById("filter-count");
+      const items = grid?.querySelectorAll<HTMLElement>(".coach-item") || [];
+
+      const credentialSelect = document.getElementById("filter-credential") as HTMLSelectElement;
+      const regionSelect = document.getElementById("filter-region") as HTMLSelectElement;
+      const languageSelect = document.getElementById("filter-language") as HTMLSelectElement;
+      const searchInput = document.getElementById("filter-search") as HTMLInputElement;
+
+      function filter() {
+        const credential = credentialSelect?.value || "";
+        const region = regionSelect?.value || "";
+        const language = languageSelect?.value || "";
+        const search = searchInput?.value.toLowerCase() || "";
+
+        let visible = 0;
+        items.forEach((item) => {
+          const matchCredential = !credential || item.dataset.credential === credential;
+          const matchRegion = !region || item.dataset.region === region;
+          const matchLanguage = !language || (item.dataset.languages || "").includes(language);
+          const matchSearch =
+            !search ||
+            (item.dataset.name || "").includes(search) ||
+            (item.dataset.specialties || "").toLowerCase().includes(search);
+
+          const show = matchCredential && matchRegion && matchLanguage && matchSearch;
+          item.style.display = show ? "" : "none";
+          if (show) visible++;
+        });
+
+        if (countEl) countEl.textContent = `${visible} coaches fundet`;
+      }
+
+      credentialSelect?.addEventListener("change", filter);
+      regionSelect?.addEventListener("change", filter);
+      languageSelect?.addEventListener("change", filter);
+      searchInput?.addEventListener("input", filter);
+    }
+
+    setupFilters();
+  </script>
+</BaseLayout>

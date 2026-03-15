@@ -1,0 +1,103 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { avatarDataUri } from "../../lib/avatar";
+
+export async function getStaticPaths() {
+  const coaches = await getCollection("coach");
+  return coaches.map((coach) => ({
+    params: { slug: coach.id },
+    props: { coach },
+  }));
+}
+
+const { coach } = Astro.props;
+const { Content } = await render(coach);
+const imgSrc = coach.data.photo || avatarDataUri(coach.data.name);
+
+const langLabels: Record<string, string> = {
+  da: "Dansk",
+  en: "English",
+  de: "Deutsch",
+  sv: "Svenska",
+  no: "Norsk",
+};
+---
+
+<BaseLayout title={coach.data.name} description={`${coach.data.name} — ICF-certificeret coach i Danmark`}>
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <a href="/find-coach" class="text-icf-blue text-sm hover:underline mb-6 inline-block">
+      ← Tilbage til coach-directory
+    </a>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Photo -->
+      <div>
+        <img
+          src={imgSrc}
+          alt={coach.data.name}
+          class="w-full aspect-square object-cover rounded-xl"
+        />
+      </div>
+
+      <!-- Info -->
+      <div class="md:col-span-2">
+        <h1 class="text-3xl font-bold text-icf-navy mb-2">{coach.data.name}</h1>
+
+        <div class="flex flex-wrap gap-2 mb-6">
+          {coach.data.credential_level && (
+            <span class="text-sm font-medium px-3 py-1 bg-icf-blue/10 text-icf-blue rounded-full">
+              {coach.data.credential_level}
+            </span>
+          )}
+          {coach.data.region && (
+            <span class="text-sm px-3 py-1 bg-gray-100 text-gray-600 rounded-full">
+              {coach.data.region}
+            </span>
+          )}
+        </div>
+
+        {coach.data.languages && coach.data.languages.length > 0 && (
+          <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Sprog</h3>
+            <p>{coach.data.languages.map((l) => langLabels[l] || l).join(", ")}</p>
+          </div>
+        )}
+
+        {coach.data.specialties && coach.data.specialties.length > 0 && (
+          <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Specialer</h3>
+            <div class="flex flex-wrap gap-2">
+              {coach.data.specialties.map((s) => (
+                <span class="text-xs px-2 py-1 bg-icf-light text-icf-navy rounded-full">{s}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {coach.data.coaching_approach && (
+          <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Coaching-tilgang</h3>
+            <p class="text-gray-700">{coach.data.coaching_approach}</p>
+          </div>
+        )}
+
+        {coach.data.contact_url && (
+          <a
+            href={coach.data.contact_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block mt-4 bg-icf-navy text-white font-medium px-5 py-2.5 rounded-lg hover:bg-icf-navy/90 transition-colors"
+          >
+            Kontakt {coach.data.name.split(" ")[0]}
+          </a>
+        )}
+
+        <!-- Bio content -->
+        <div class="prose prose-gray mt-8 max-w-none">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

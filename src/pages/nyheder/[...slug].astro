@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const news = await getCollection("news");
+  return news.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.excerpt}>
+  <article class="max-w-3xl mx-auto px-4 py-12">
+    <a href="/nyheder" class="text-icf-blue text-sm hover:underline mb-6 inline-block">
+      ← Tilbage til nyheder
+    </a>
+
+    <time class="text-sm text-gray-400 block" datetime={post.data.date.toISOString()}>
+      {post.data.date.toLocaleDateString("da-DK", { day: "numeric", month: "long", year: "numeric" })}
+    </time>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-icf-navy mt-2 mb-8">{post.data.title}</h1>
+
+    {post.data.image && (
+      <img src={post.data.image} alt="" class="w-full rounded-xl mb-8" />
+    )}
+
+    <div class="prose prose-gray prose-lg max-w-none">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

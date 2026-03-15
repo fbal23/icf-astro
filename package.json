@@ -1,0 +1,26 @@
+{
+  "name": "icf-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "tinacms dev -c \"astro dev\"",
+    "dev:astro": "astro dev",
+    "build": "tinacms build && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^5.0.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.2.1",
+    "@tinacms/cli": "^2.1.9",
+    "astro": "^6.0.4",
+    "playwright": "^1.58.2",
+    "pngjs": "^7.0.0",
+    "tailwindcss": "^4.2.1",
+    "tinacms": "^3.6.1"
+  }
+}

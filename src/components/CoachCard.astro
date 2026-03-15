@@ -1,0 +1,41 @@
+---
+import { avatarDataUri } from "../lib/avatar";
+
+interface Props {
+  name: string;
+  credential_level?: string;
+  region?: string;
+  languages?: string[];
+  specialties?: string[];
+  coaching_approach?: string;
+  photo?: string;
+  slug: string;
+}
+
+const { name, credential_level, region, languages, specialties, coaching_approach, photo, slug } = Astro.props;
+const imgSrc = photo || avatarDataUri(name);
+
+// Build a short excerpt from specialties or coaching approach
+const excerpt = specialties?.join(", ") || coaching_approach?.slice(0, 100) || "";
+---
+
+<div class="bg-white rounded-lg border border-icf-border p-6">
+  <a href={`/find-coach/${slug}`} class="block">
+    <img
+      src={imgSrc}
+      alt={name}
+      class="w-full aspect-square object-cover rounded-lg mb-4"
+      loading="lazy"
+    />
+    <h3 class="font-semibold text-icf-navy mb-1" style="font-size: 20px;">{name}</h3>
+    {credential_level && (
+      <span class="text-sm font-medium text-icf-blue">{credential_level}</span>
+    )}
+    {excerpt && (
+      <p class="text-icf-excerpt mt-2" style="font-size: 14px;">{excerpt}</p>
+    )}
+    <span class="inline-block mt-3 text-icf-blue font-bold" style="font-size: 14px;">
+      Se profil →
+    </span>
+  </a>
+</div>

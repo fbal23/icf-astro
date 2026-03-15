@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* ICF Danmark brand colours — from Kadence theme config */
+  --color-icf-navy: #212251;       /* palette1: header/footer bg, primary */
+  --color-icf-blue: #2b379b;       /* palette2: links, interactive */
+  --color-icf-accent: #5778fa;     /* palette3: link hover, accents */
+  --color-icf-yellow: #efcb30;     /* palette4: highlight/accent */
+  --color-icf-bone: #f8f0e4;       /* palette5: footer text, secondary */
+  --color-icf-white: #ffffff;      /* palette6: text on dark */
+  --color-icf-dark: #333333;       /* palette7: body text */
+  --color-icf-light: #f2f2f2;      /* palette8: borders, backgrounds */
+  --color-icf-border: #e8e0d8;     /* card borders */
+  --color-icf-excerpt: #555555;    /* excerpt text */
+
+  /* Typography — match WordPress Kadence body font */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Base body text — match WordPress Kadence: 17px / 1.6 */
+body {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* Headings — match WordPress Kadence sizes */
+h1 { font-size: 32px; line-height: 1.5; }
+h2 { font-size: 28px; line-height: 1.5; }
+h3 { font-size: 24px; line-height: 1.5; }
+h4 { font-size: 22px; line-height: 1.5; }
+
+/* Links */
+a:not([class]) {
+  color: #2b379b;
+}
+a:not([class]):hover {
+  color: #5778fa;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  color: #212251;
+}
+
+/* Prose overrides for content pages */
+.prose h2, .prose h3 {
+  color: #212251;
+}
+.prose a {
+  color: #2b379b;
+}
+.prose a:hover {
+  color: #5778fa;
+}

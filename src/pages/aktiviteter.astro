@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+---
+
+<BaseLayout title="Aktiviteter" description="Kommende aktiviteter, events og netværksmøder hos ICF Danmark.">
+  <Hero title="Aktiviteter" />
+
+  <section class="max-w-[900px] mx-auto px-6 py-12">
+    <p class="text-icf-dark leading-relaxed mb-8">
+      En vigtig del af ICF's filosofi er, at vi, som coaches, lærende efteruddannere og udskillere os. Deriblandt aktiviteter som Coach Café, netværksmøder, workshops og konferencer skaber ICF Danmark rum for faglig inspiration og fællesskab.
+    </p>
+
+    <h2 class="text-[28px] font-bold text-icf-navy mb-6">Kommende aktiviteter</h2>
+
+    <p class="text-icf-dark leading-relaxed mb-6">
+      ICF Danmark arrangerer løbende events og netværksmøder for coaches. Aktiviteterne inkluderer:
+    </p>
+
+    <ul class="list-disc list-inside text-icf-dark space-y-2 mb-8">
+      <li><strong>Coach Café</strong> – uformelle online møder om aktuelle emner</li>
+      <li><strong>Netværk Sjælland</strong> – månedlige møder i Zealix Copenhagen</li>
+      <li><strong>International Coaches Meet Up</strong> – for coaches på tværs af landegrænser</li>
+      <li><strong>ICF workshoprækken</strong> – kurser for professionelle coaches</li>
+      <li><strong>Præsentation af coachforbilleder</strong> – fra ICF-akkrediterede udbydere</li>
+      <li><strong>Grafisk facilitering og andre workshops</strong></li>
+    </ul>
+
+    <p class="text-icf-dark text-sm mb-8">
+      Tilmelding og detaljer om aktuelle events sendes via nyhedsbreve og annonceres på ICF's globale eventkalender.
+    </p>
+
+    <a
+      href="https://coachingfederation.org/events"
+      target="_blank"
+      rel="noopener"
+      class="inline-block bg-icf-navy text-white font-medium px-6 py-3 rounded-md text-sm hover:bg-icf-navy/90 transition-colors mb-12"
+    >
+      ICF Global Eventkalender ↗
+    </a>
+
+    <!-- Aktiviteter i billeder -->
+    <h2 class="text-[28px] font-bold text-icf-navy mb-8 pb-4 border-b border-icf-border">Aktiviteter i billeder</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+      <div>
+        <img src="/uploads/icf-original/events/Coach-cafe-1-800x568-1.jpg" alt="Coach Café" class="w-full rounded-lg object-cover aspect-[4/3]" />
+        <p class="text-sm text-icf-excerpt mt-2 text-center">Coach Café</p>
+      </div>
+      <div>
+        <img src="/uploads/icf-original/events/Event-pictures-2024-800x568-1.png" alt="Event 2024" class="w-full rounded-lg object-cover aspect-[4/3]" />
+      </div>
+      <div>
+        <img src="/uploads/icf-original/events/Event-pictures-2024-1-800x568-1.png" alt="Event 2024" class="w-full rounded-lg object-cover aspect-[4/3]" />
+      </div>
+      <div>
+        <img src="/uploads/icf-original/events/Netvaerk-Sjaelland-800x568-1.png" alt="Netværk Sjælland" class="w-full rounded-lg object-cover aspect-[4/3]" />
+        <p class="text-sm text-icf-excerpt mt-2 text-center">Netværk Sjælland</p>
+      </div>
+      <div>
+        <img src="/uploads/icf-original/events/International-coaches-800x568-1.png" alt="International Coaches Meet Up" class="w-full rounded-lg object-cover aspect-[4/3]" />
+        <p class="text-sm text-icf-excerpt mt-2 text-center">International Coaches Meet Up</p>
+      </div>
+      <div>
+        <img src="/uploads/icf-original/events/Graffisk-fatilitering-800x568-1.png" alt="Grafisk facilitering" class="w-full rounded-lg object-cover aspect-[4/3]" />
+        <p class="text-sm text-icf-excerpt mt-2 text-center">Grafisk facilitering</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

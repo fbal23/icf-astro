@@ -1,0 +1,93 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import { getCollection } from "astro:content";
+
+const members = (await getCollection("boardMember")).sort(
+  (a, b) => (a.data.order || 99) - (b.data.order || 99)
+);
+---
+
+<BaseLayout title="ICF Danmark – Organisation" description="ICF Danmarks bestyrelse, komitéer og netværk. Mød de frivillige der driver ICF Danmark.">
+  <Hero title="ICF Danmark – Organisation" />
+
+  <section class="max-w-[900px] mx-auto px-6 py-12">
+    <p class="text-icf-dark leading-relaxed mb-8">
+      ICF Danmark ledes af en frivillig bestyrelse valgt af generalforsamlingen. Bestyrelsen arbejder for at fremme coaching-professionen i Danmark og repræsentere ICF chapterets medlemmer.
+    </p>
+
+    <!-- Bestyrelsen -->
+    <h2 class="text-[28px] font-bold text-icf-navy mb-8 pb-4 border-b border-icf-border">Bestyrelsen</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-8 mb-16">
+      {members.map((member) => (
+        <div class="text-center">
+          <img
+            src={member.data.photo || "/uploads/icf-original/leadership/placeholder.png"}
+            alt={member.data.name}
+            class="w-40 h-40 object-cover rounded-lg mx-auto mb-4"
+          />
+          <h3 class="text-lg font-bold text-icf-navy">{member.data.name}</h3>
+          <p class="text-sm text-icf-excerpt">{member.data.title}</p>
+          <a href="#" class="text-sm text-icf-blue hover:text-icf-accent">Læs mere →</a>
+        </div>
+      ))}
+    </div>
+
+    <!-- Komitéer og Netværk -->
+    <h2 class="text-[28px] font-bold text-icf-navy mb-8 pb-4 border-b border-icf-border">Komitéer og Netværk</h2>
+
+    <div class="grid md:grid-cols-3 gap-8 mb-16">
+      <div class="bg-icf-light rounded-lg p-6">
+        <h3 class="text-lg font-bold text-icf-navy mb-3">Etisk Komité</h3>
+        <p class="text-sm text-icf-dark mb-4">
+          Komitéens overordnede formål er at sikre efterlevelse af ICFs etiske regler og korrekt brug af ICFs varemærke og logo.
+        </p>
+        <ul class="text-sm text-icf-dark space-y-1">
+          <li>Pernille Baumann (MCC) – Formand</li>
+          <li>Pia Friberg Krejsager (MCC)</li>
+          <li>Tine Oksen (PCC)</li>
+        </ul>
+      </div>
+
+      <div class="bg-icf-light rounded-lg p-6">
+        <h3 class="text-lg font-bold text-icf-navy mb-3">Nomineringskomité</h3>
+        <ul class="text-sm text-icf-dark space-y-1">
+          <li>Pia F. Krejsager (Formand)</li>
+          <li>Christine Waldmann</li>
+          <li>Inga Coello</li>
+        </ul>
+      </div>
+
+      <div class="bg-icf-light rounded-lg p-6">
+        <h3 class="text-lg font-bold text-icf-navy mb-3">Netværker</h3>
+        <p class="text-sm text-icf-dark mb-3">
+          Netværk Jylland/Fyn, Sjælland og International Coaches Meet-Up
+        </p>
+        <p class="text-sm text-icf-dark">
+          Information om deltagelse i ICF Netværk
+        </p>
+        <p class="text-sm text-icf-dark mt-3">
+          Når du er medlem af ICF Denmark, kan du deltage ubegrænset og det koster ikke noget at deltage.
+        </p>
+        <p class="text-sm text-icf-dark mt-3">
+          Hvis du ikke er medlem af ICF Danmark, er du velkommen til at være gæst på et netværksmøde én gang for at se, hvad netværket er.
+        </p>
+        <p class="text-sm text-icf-dark mt-3">
+          ICF Danmark søger om CCEU-point til de ICF medlemmer, der deltager på møderne.
+        </p>
+      </div>
+    </div>
+
+    <!-- Frivillige søges -->
+    <h2 class="text-[28px] font-bold text-icf-navy mb-6">Frivillige søges – bliv en del af vores fællesskab</h2>
+
+    <p class="text-icf-dark leading-relaxed mb-4">
+      ICF Danmark er en frivillig forening, der bygger på medlemmernes eget engagement for at skabe et fælles og stærkt fundament for udviklingen af professionel coaching i Danmark og i verden. Vi står over for en spændende tid med mulighed for at udvide og forbedre vores tjenester til vores 100 medlemmer. Derfor opfordrer vi dig til at bringe dine færdigheder og passion ind i et af vores frivillige teams. Uanset om det er for et enkelt projekt eller for en længere periode, så vil du blive en del af et engageret fællesskab med mulighed for at lære, udvide dit netværk og ikke mindst bidrage til en forbedret medlemsoplevelse.
+    </p>
+
+    <p class="text-icf-dark leading-relaxed mb-8">
+      Vi søger frivillige inden for kommunikation (sociale medier, korrekturlæsning, etc.), netværksdrift på Sjælland, event- og konferenceorganisering, CSR/pro bono-initiativer og meget mere. Vil du vide mere, er du velkommen til at kontakte et bestyrelsesmedlem direkte eller skrive til <a href="mailto:sekretaer@coachingfederation.dk" class="text-icf-blue hover:text-icf-accent underline">sekretaer@coachingfederation.dk</a>. Vi ser frem til at høre fra dig!
+    </p>
+  </section>
+</BaseLayout>
