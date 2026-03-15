@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tinacms dev -c \"astro dev\"",
     "dev:astro": "astro dev",
-    "build": "tinacms build && astro build",
+    "build": "if [ -n \"$TINA_CLIENT_ID\" ]; then tinacms build && astro build; else astro build; fi",
     "preview": "astro preview",
     "astro": "astro"
   },
