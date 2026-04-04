@@ -13,7 +13,8 @@
     "astro": "astro",
     "audit": "node style-audit.mjs",
     "audit:discover": "node style-audit.mjs --discover",
-    "audit:screenshots": "node section-screenshots.mjs"
+    "audit:screenshots": "node section-screenshots.mjs",
+    "audit:visual": "node section-screenshots.mjs --diff"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.0",

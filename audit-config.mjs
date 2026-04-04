@@ -22,6 +22,9 @@ export const TOLERANCE = {
   color: 10,
 };
 
+// Pixel diff threshold — sections above this % are flagged as FAIL
+export const PIXEL_DIFF_THRESHOLD = 2;
+
 /**
  * Section map: original (icf-chapters.org) selector → Astro selector.
  *

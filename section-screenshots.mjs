@@ -7,11 +7,13 @@
  *
  * Usage:
  *   node section-screenshots.mjs                    # Screenshot homepage sections
+ *   node section-screenshots.mjs --diff             # Screenshot + pixel diff per section
  *   node section-screenshots.mjs --page /find-coach # Specific page
  *   node section-screenshots.mjs --astro-only       # Only Astro screenshots
  *   node section-screenshots.mjs --viewport 768     # Tablet width
  *
  * Output: screenshots/sections/<page>/<section-name>-original.png, <section-name>-astro.png
+ * With --diff: also generates <section-name>-diff.png and a summary table
  */
 
 import { chromium } from "playwright";
@@ -23,7 +25,9 @@ import {
   ASTRO_URL,
   VIEWPORT,
   SECTION_MAP,
+  PIXEL_DIFF_THRESHOLD,
 } from "./audit-config.mjs";
+import { comparePNGs } from "./compare.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -31,6 +35,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv.slice(2);
 const astroOnly = args.includes("--astro-only");
+const doDiff = args.includes("--diff");
 const pageIdx = args.indexOf("--page");
 const pagePath = pageIdx !== -1 ? (args[pageIdx + 1] || "/") : "/";
 const vpIdx = args.indexOf("--viewport");
@@ -108,16 +113,19 @@ async function main() {
   console.log(`Output: ${outDir}\n`);
 
   let captured = 0;
+  const diffResults = [];
 
   for (const section of sections) {
     const slug = slugify(section.name);
+    let astroFile = null;
+    let origFile = null;
 
     // Astro screenshot
     try {
       const astroEl = await astroPage.$(section.astro);
       if (astroEl) {
-        const astroPath = path.join(outDir, `${slug}-astro.png`);
-        await astroEl.screenshot({ path: astroPath });
+        astroFile = path.join(outDir, `${slug}-astro.png`);
+        await astroEl.screenshot({ path: astroFile });
         console.log(`  OK  ${section.name} (astro) → ${slug}-astro.png`);
         captured++;
       } else {
@@ -132,8 +140,8 @@ async function main() {
       try {
         const origEl = await originalPage.$(section.original);
         if (origEl) {
-          const origPath = path.join(outDir, `${slug}-original.png`);
-          await origEl.screenshot({ path: origPath });
+          origFile = path.join(outDir, `${slug}-original.png`);
+          await origEl.screenshot({ path: origFile });
           console.log(`  OK  ${section.name} (original) → ${slug}-original.png`);
           captured++;
         } else {
@@ -143,9 +151,52 @@ async function main() {
         console.log(`  ERR ${section.name} (original): ${e.message}`);
       }
     }
+
+    // Pixel diff (when --diff flag is set and both screenshots exist)
+    if (doDiff && astroFile && origFile) {
+      try {
+        const diffFile = path.join(outDir, `${slug}-diff.png`);
+        const result = await comparePNGs(origFile, astroFile, diffFile);
+        const pass = parseFloat(result.diffPercent) <= PIXEL_DIFF_THRESHOLD;
+        diffResults.push({
+          name: section.name,
+          diffPercent: result.diffPercent,
+          diffPixels: result.diffPixels,
+          pass,
+        });
+        const status = pass ? "PASS" : "FAIL";
+        console.log(`  ${status} ${section.name} visual diff: ${result.diffPercent}% → ${slug}-diff.png`);
+      } catch (e) {
+        console.log(`  ERR ${section.name} (diff): ${e.message}`);
+        diffResults.push({ name: section.name, diffPercent: "ERR", pass: false });
+      }
+    }
   }
 
   console.log(`\nCaptured ${captured} section screenshots in ${outDir}`);
+
+  // Visual diff summary table
+  if (doDiff && diffResults.length > 0) {
+    const failures = diffResults.filter((r) => !r.pass).length;
+
+    console.log(`\n${"=".repeat(60)}`);
+    console.log(`VISUAL DIFF SUMMARY (threshold: ${PIXEL_DIFF_THRESHOLD}%)`);
+    console.log(`${"=".repeat(60)}`);
+    console.log(`${"Section".padEnd(40)} ${"Diff %".padStart(8)}  Status`);
+    console.log(`${"-".repeat(40)} ${"-".repeat(8)}  ${"-".repeat(6)}`);
+    for (const r of diffResults) {
+      const pct = typeof r.diffPercent === "string" ? r.diffPercent : `${r.diffPercent}%`;
+      const status = r.pass ? "PASS" : "FAIL";
+      console.log(`${r.name.padEnd(40)} ${pct.padStart(8)}  ${status}`);
+    }
+    console.log(`${"-".repeat(60)}`);
+    console.log(`Total: ${diffResults.length} sections, ${failures} failures`);
+
+    if (failures > 0) {
+      console.log(`\nOpen the *-diff.png files to see red-highlighted pixel differences.`);
+      process.exit(1);
+    }
+  }
 
   await browser.close();
 }
