@@ -37,52 +37,102 @@ export const PIXEL_DIFF_THRESHOLD = 2;
  *   .entry-content > .banner:last-child (bottom banner, 1440x312)
  *   footer#footer (1440x319)
  */
+// Switch target: "astro" for Astro selectors, "wp" for WordPress selectors
+const TARGET = process.env.AUDIT_TARGET || "astro";
+
+const ASTRO_SECTIONS = [
+  {
+    name: "Header",
+    original: "header#header",
+    astro: "header",
+  },
+  {
+    name: "Hero Banner",
+    original: ".entry-content > .banner:first-child",
+    astro: "main > section:nth-child(1)",
+  },
+  {
+    name: "Two-Column (About + News)",
+    original: ".entry-content > .wrap > .cols.layout2",
+    astro: "main > section:nth-child(2)",
+  },
+  {
+    name: "Partners / Sponsors",
+    original: ".entry-content > .wrap > .news.nb3",
+    astro: "main > section:nth-child(3)",
+  },
+  {
+    name: "Find Coach + Activities",
+    original: ".entry-content > .wrap > .blocs",
+    astro: "main > section:nth-child(4)",
+    note: "Side-by-side blocs on both original and Astro",
+  },
+  {
+    name: "Bottom Banner (Enjoy Great Learning)",
+    original: ".entry-content > .banner:last-child",
+    astro: "main > section:nth-child(5)",
+    note: "Enjoy Great Learning CTA — bottom banner on original site",
+  },
+  {
+    name: "Join Community CTA",
+    original: null,
+    astro: "main > section:nth-child(6)",
+    note: "Astro addition — not on the original icf-chapters.org",
+  },
+  {
+    name: "Footer",
+    original: "footer#footer",
+    astro: "footer",
+  },
+];
+
+const WP_SECTIONS = [
+  {
+    name: "Header",
+    original: "header#header",
+    astro: "header#masthead",
+  },
+  {
+    name: "Hero Banner",
+    original: ".entry-content > .banner:first-child",
+    astro: ".entry-content > div:nth-child(1)",
+  },
+  {
+    name: "Two-Column (About + News)",
+    original: ".entry-content > .wrap > .cols.layout2",
+    astro: ".entry-content > div:nth-child(2)",
+  },
+  {
+    name: "Partners / Sponsors",
+    original: ".entry-content > .wrap > .news.nb3",
+    astro: ".entry-content > div:nth-child(3)",
+  },
+  {
+    name: "Find Coach + Activities",
+    original: ".entry-content > .wrap > .blocs",
+    astro: ".entry-content > div:nth-child(4)",
+    note: "Now combined side-by-side like original",
+  },
+  {
+    name: "Bottom Banner (Enjoy Great Learning)",
+    original: ".entry-content > .banner:last-child",
+    astro: ".entry-content > div:nth-child(5)",
+  },
+  {
+    name: "Join Community CTA",
+    original: null,
+    astro: ".entry-content > div:nth-child(6)",
+    note: "WP addition — not on the original icf-chapters.org",
+  },
+  {
+    name: "Footer",
+    original: "footer#footer",
+    astro: "footer#colophon",
+  },
+];
+
 export const SECTION_MAP = {
-  "/": [
-    {
-      name: "Header",
-      original: "header#header",
-      astro: "header",
-    },
-    {
-      name: "Hero Banner",
-      original: ".entry-content > .banner:first-child",
-      astro: "main > section:nth-child(1)",
-    },
-    {
-      name: "Two-Column (About + News)",
-      original: ".entry-content > .wrap > .cols.layout2",
-      astro: "main > section:nth-child(2)",
-    },
-    {
-      name: "Partners / Sponsors",
-      original: ".entry-content > .wrap > .news.nb3",
-      astro: "main > section:nth-child(3)",
-    },
-    {
-      name: "Find Coach + Activities",
-      original: ".entry-content > .wrap > .blocs",
-      astro: "main > section:nth-child(4)",
-      note: "Side-by-side blocs on both original and Astro",
-    },
-    {
-      name: "Bottom Banner (Enjoy Great Learning)",
-      original: ".entry-content > .banner:last-child",
-      astro: "main > section:nth-child(5)",
-      note: "Enjoy Great Learning CTA — bottom banner on original site",
-    },
-    {
-      name: "Join Community CTA",
-      original: null,
-      astro: "main > section:nth-child(6)",
-      note: "Astro addition — not on the original icf-chapters.org",
-    },
-    {
-      name: "Footer",
-      original: "footer#footer",
-      astro: "footer",
-    },
-  ],
+  "/": TARGET === "wp" ? WP_SECTIONS : ASTRO_SECTIONS,
 };
 
 /**
