@@ -53,9 +53,12 @@ const nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title} | ICF Danmark</title>
-    <!-- System font stack — matches WordPress Kadence theme -->
+    <!-- Plus Jakarta Sans — matches icf-chapters.org original -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
-  <body class="font-sans text-icf-dark bg-white antialiased">
+  <body class="font-sans text-icf-blue bg-white antialiased">
     <!-- WCAG skip-to-content -->
     <a
       href="#main-content"
@@ -64,40 +67,43 @@ const nav = [
       Gå til indhold
     </a>
 
-    <!-- Header — matches WordPress Kadence header -->
-    <header class="bg-icf-navy">
-      <div class="max-w-[1200px] mx-auto px-6 py-3 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3">
-          <img
-            src="/uploads/ICF_DenmarkCharterChapter_Horizontal_RGB_Negative.png"
-            alt="ICF Danmark"
-            class="h-10"
-          />
-          <span class="text-white font-bold text-lg hidden sm:inline">ICF Danmark</span>
-        </a>
+    <!-- Header — matches icf-chapters.org original (two rows: logo bar + nav bar) -->
+    <header>
+      <!-- Top bar: logo + contact -->
+      <div class="bg-white">
+        <div class="max-w-[1400px] mx-auto px-5 py-6 flex items-center justify-between">
+          <a href="/">
+            <img
+              src="/uploads/icf-logo.png"
+              alt="ICF Danmark"
+              class="h-[75px]"
+            />
+          </a>
+          <div class="hidden md:flex flex-col items-end text-sm text-icf-blue">
+            <span class="font-bold tracking-wider uppercase text-xs">ICF CHAPTER DANMARK</span>
+            <a href="mailto:kontakt@coachingfederation.dk" class="hover:text-icf-accent">kontakt@coachingfederation.dk</a>
+          </div>
+        </div>
+      </div>
 
-        <!-- Desktop nav -->
-        <nav class="hidden lg:flex items-center gap-5" aria-label="Hovednavigation">
+      <!-- Navigation bar -->
+      <div class="bg-icf-blue">
+        <nav class="max-w-[1400px] mx-auto hidden lg:flex" aria-label="Hovednavigation">
           {nav.map((item) => (
             <div class="relative group">
               <a
                 href={item.href}
-                class="text-sm text-white/90 hover:text-white transition-colors flex items-center gap-1 py-2"
+                class="block px-5 py-3 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-colors"
               >
                 {item.label}
-                {item.children && (
-                  <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                )}
               </a>
               {item.children && (
-                <div class="absolute top-full left-0 hidden group-hover:block pt-1 z-50">
-                  <div class="bg-[#1A202C] rounded shadow-lg min-w-[200px]">
+                <div class="absolute top-full left-0 hidden group-hover:block z-50">
+                  <div class="bg-icf-navy shadow-lg min-w-[220px]">
                     {item.children.map((child) => (
                       <a
                         href={child.href}
-                        class="block px-4 py-3 text-xs text-gray-300 hover:text-white hover:bg-[#2D3748] border-b border-white/10 last:border-0"
+                        class="block px-5 py-3 text-xs text-white/80 hover:text-white hover:bg-white/10 border-b border-white/10 last:border-0"
                       >
                         {child.label}
                       </a>
@@ -110,20 +116,23 @@ const nav = [
         </nav>
 
         <!-- Mobile menu toggle -->
-        <button
-          id="mobile-menu-btn"
-          class="lg:hidden text-white"
-          aria-label="Åbn menu"
-          aria-expanded="false"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        <div class="lg:hidden flex items-center justify-between px-5 py-3">
+          <span class="text-white text-sm font-medium">Menu</span>
+          <button
+            id="mobile-menu-btn"
+            class="text-white"
+            aria-label="Åbn menu"
+            aria-expanded="false"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Mobile nav -->
-      <nav id="mobile-menu" class="hidden lg:hidden px-6 pb-4" aria-label="Mobilnavigation">
+      <nav id="mobile-menu" class="hidden lg:hidden bg-icf-navy px-6 pb-4" aria-label="Mobilnavigation">
         {nav.map((item) => (
           <div>
             <a
@@ -173,23 +182,54 @@ const nav = [
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-icf-navy mt-0">
-      <div class="max-w-[900px] mx-auto px-6 py-20 text-center">
-        <h3 class="text-white font-bold text-sm tracking-wider uppercase mb-6">ICF CHAPTER DANMARK</h3>
-        <p class="text-icf-bone text-sm mb-6 max-w-2xl mx-auto leading-relaxed">
-          ICF Denmark er en lokal afdeling af International Coach Federation der er en verdensomspændende interesseorganisation indenfor professionel coaching. ICF Danmark har egne vedtægter, bestyrelse og præsident vedtaget og valgt af ICF Danmarks medlemmer på det årlige medlemsmøde.
-        </p>
-        <p class="text-icf-bone text-sm mb-6">
-          E-mail: <a href="mailto:sekretaer@coachingfederation.dk" class="text-icf-accent hover:text-white underline">sekretaer@coachingfederation.dk</a>
-        </p>
-        <div class="flex justify-center gap-4 text-icf-bone text-sm mb-10">
-          <a href="https://facebook.com" class="hover:text-white transition-colors">Facebook</a>
-          <a href="https://linkedin.com" class="hover:text-white transition-colors">LinkedIn</a>
+    <!-- Footer — matches icf-chapters.org (bg #2b379b, three-column + legal bar) -->
+    <footer class="bg-icf-blue mt-10 text-[15px] text-white">
+      <div class="max-w-[1400px] mx-auto px-5 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
+          <!-- Column 1: Info -->
+          <div>
+            <h4 class="font-bold text-sm tracking-wider uppercase mb-4 text-white">ICF CHAPTER DANMARK</h4>
+            <p class="text-white/80 text-sm leading-relaxed mb-3">
+              ICF Denmark er en lokal afdeling af International Coach Federation der er en verdensomspændende interesseorganisation indenfor professionel coaching.
+            </p>
+            <p class="text-white/80 text-sm">
+              <a href="mailto:kontakt@coachingfederation.dk" class="hover:text-white underline">kontakt@coachingfederation.dk</a>
+            </p>
+            <div class="flex gap-4 text-white/80 text-sm mt-3">
+              <a href="https://facebook.com" class="hover:text-white transition-colors">Facebook</a>
+              <a href="https://linkedin.com" class="hover:text-white transition-colors">LinkedIn</a>
+            </div>
+          </div>
+          <!-- Column 2: Navigation -->
+          <div>
+            <h4 class="font-bold text-sm tracking-wider uppercase mb-4 text-white">Navigation</h4>
+            <ul class="space-y-2 text-sm text-white/80">
+              <li><a href="/icf-danmark" class="hover:text-white">ICF Danmark</a></li>
+              <li><a href="/uddannelse-og-certificering" class="hover:text-white">Uddannelse og certificering</a></li>
+              <li><a href="/aktiviteter" class="hover:text-white">Aktiviteter</a></li>
+              <li><a href="/nyheder" class="hover:text-white">Nyheder</a></li>
+              <li><a href="/bliv-medlem" class="hover:text-white">Bliv medlem</a></li>
+            </ul>
+          </div>
+          <!-- Column 3: Discover -->
+          <div>
+            <h4 class="font-bold text-sm tracking-wider uppercase mb-4 text-white">Find en Coach</h4>
+            <ul class="space-y-2 text-sm text-white/80">
+              <li><a href="/find-coach" class="hover:text-white">Søg efter en coach</a></li>
+              <li><a href="/hvorfor-vaelge-en-icf-coach" class="hover:text-white">Hvorfor vælge en ICF coach?</a></li>
+              <li><a href="/acc-pcc-mcc" class="hover:text-white">Hvad er ACC, PCC og MCC?</a></li>
+            </ul>
+          </div>
         </div>
-        <div class="border-t border-white/10 pt-8 text-sm text-icf-bone">
-          <p>&copy; {new Date().getFullYear()} ICF Chapter Danmark</p>
-          <p class="mt-2"><a href="/privatlivspolitik" class="text-icf-bone/60 hover:text-white underline text-xs">Privatlivspolitik</a></p>
+      </div>
+      <!-- Legal bar -->
+      <div class="border-t border-white/20">
+        <div class="max-w-[1400px] mx-auto px-5 py-6 flex flex-wrap items-center justify-between text-sm text-white/70">
+          <span>&copy; {new Date().getFullYear()} International Coaching Federation</span>
+          <div class="flex gap-4">
+            <a href="/privatlivspolitik" class="hover:text-white">Privacy policy ICF</a>
+            <a href="/privatlivspolitik-chapter" class="hover:text-white">Privacy policy chapter</a>
+          </div>
         </div>
       </div>
     </footer>

@@ -4,85 +4,125 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout title="ICF Danmarks chapter – internationalt coachingfællesskab" description="ICF Danmark er det danske chapter af International Coaching Federation. Find certificerede coaches og bliv medlem.">
 
-  <!-- Section 1: Hero Banner (image contains baked-in text, matches WordPress) -->
-  <section class="relative overflow-hidden bg-icf-navy">
+  <!-- Section 1: Hero Banner (matches icf-chapters.org) -->
+  <section class="relative overflow-hidden">
     <img
       src="/uploads/chapter-events-banner.jpg"
       alt="Enjoy Great Learning — Engage in virtual and in-person ICF Chapter events and webinars"
-      class="w-full h-auto max-h-[420px] object-contain"
+      class="w-full h-auto"
       loading="eager"
     />
   </section>
 
-  <!-- Section 2: Two-column layout — About + News (matches original icf-chapters.org) -->
-  <section class="max-w-[1100px] mx-auto px-6 py-10">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Section 2: Two-column layout — About + News (matches icf-chapters.org) -->
+  <section class="max-w-[1400px] mx-auto mt-10 mb-14">
+    <div class="grid grid-cols-1 md:grid-cols-2">
 
       <!-- Left column: ICF Danmark About -->
-      <div class="bg-icf-light border border-icf-border rounded-lg p-8">
-        <h2 class="text-xl font-bold text-icf-navy mb-4">ICF Danmark</h2>
-        <p class="text-icf-dark text-sm leading-relaxed mb-4">
+      <div class="p-4">
+        <p class="mb-2">&nbsp;</p>
+        <h2 class="text-[22px] font-bold text-icf-blue mb-4">ICF Danmark</h2>
+        <p class="text-icf-blue leading-relaxed mb-4">
           Vi er en non-profit, frivillig forening, der bygger på medlemmernes engagement for at skabe et fælles og stærkt fundament for udviklingen af professionel coaching i Danmark og i verden.
         </p>
-        <p class="text-icf-dark text-sm leading-relaxed mb-6">
+        <p class="text-icf-blue leading-relaxed mb-6">
           ICF Danmark er det danske chapter af International Coaching Federation (ICF), der på verdensplan har 60.000 aktive medlemmer i 166 lande. I Danmark er der over 150 certificerede coaches. Alle medlemmer af den danske brancheorganisation har gennemgået en coachuddannelse akkrediteret af ICF (eller er under uddannelse), udvikler deres færdigheder løbende, følger ICF's etiske retningslinjer, og de fleste medlemmer vælger at sikre kvaliteten af deres coaching via ICF's certificeringsprogram.
         </p>
-        <a href="/icf-danmark" class="block w-full text-center bg-icf-blue text-white font-medium px-6 py-3 rounded-md text-sm hover:bg-icf-navy transition-colors">
-          ICF Danmark
-        </a>
+        <div class="text-center mt-6">
+          <a href="/icf-danmark" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+            ICF Danmark
+          </a>
+        </div>
       </div>
 
       <!-- Right column: Latest News -->
-      <div class="bg-icf-light border border-icf-border rounded-lg p-8">
-        <h2 class="text-lg font-bold text-icf-navy mb-3">Indkaldelse til den årlige Generalforsamling i ICF Danmark</h2>
-        <p class="text-sm text-icf-dark font-semibold mb-3">
-          Tirsdag den 24. marts 2026 kl. 15.00–16.30<br />
-          Virtuel Generalforsamling
+      <div class="p-4">
+        <p class="mb-2">
+          <strong class="text-icf-blue">Indkaldelse til den årlige Generalforsamling i ICF Danmark</strong>
         </p>
-        <p class="text-sm text-icf-dark mb-2">Kære medlem,</p>
-        <p class="text-sm text-icf-dark leading-relaxed mb-3">
+        <p class="text-icf-blue mb-3">
+          <strong>Tirsdag den 24. marts 2026 kl. 15.00–16.30<br />
+          Virtuel Generalforsamling</strong>
+        </p>
+        <p class="text-icf-blue leading-relaxed mb-3">
           Vi vil gerne invitere dig til at sætte X i kalenderen tirsdag den 24. marts 2026 kl. 15.00–16.30, hvor vi mødes på Zoom til ICF Danmarks årlige generalforsamling. Vi i bestyrelsen glæder os rigtig meget, til at fortælle dig om de planer vi arbejder med for ICF Danmark det næste års tid.
         </p>
-        <p class="text-sm text-icf-dark leading-relaxed mb-6">
+        <p class="text-icf-blue leading-relaxed mb-6">
           Hvis du ønsker at deltage på Generalforsamlingen, bedes du tilmelde dig på e-mail <a href="mailto:sekretaer@coachingfederation.dk" class="text-icf-blue hover:text-icf-accent underline">sekretaer@coachingfederation.dk</a> senest 24 timer inden.<br />
           Alle tilmeldte vil dagen inden Generalforsamlingen modtage et Zoom-link til brug for deltagelse på Generalforsamlingen.
         </p>
-        <a href="/nyheder" class="block w-full text-center bg-icf-navy text-white font-medium px-6 py-3 rounded-md text-sm hover:bg-icf-blue transition-colors">
-          Se alle nyheder
-        </a>
+        <div class="text-center mt-6">
+          <a href="/nyheder" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+            Se alle nyheder
+          </a>
+        </div>
       </div>
 
     </div>
   </section>
 
-  <!-- Section 3: Akkrediterede uddannelsesudbydere -->
-  <section class="max-w-[1100px] mx-auto px-6 py-10">
-    <div class="flex justify-center items-center gap-8 flex-wrap">
-      <a href="#" class="block"><img src="/uploads/icf-original/partners/partner-expand.png" alt="EXPAND Coachuddannelse" class="h-36 object-contain" /></a>
-      <a href="#" class="block"><img src="/uploads/icf-original/partners/partner-sofia-manning.png" alt="Danmarks Førende Coachuddannelse" class="h-36 object-contain" /></a>
-      <a href="#" class="block"><img src="/uploads/icf-original/partners/partner-grow2.png" alt="GROW2" class="h-36 object-contain" /></a>
+  <!-- Section 3: Akkrediterede uddannelsesudbydere (matches icf-chapters.org card layout) -->
+  <section class="max-w-[1400px] mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <div class="mb-0">
+          <img src="/uploads/icf-original/partners/partner-expand.png" alt="EXPAND Coachuddannelse" class="w-full h-[340px] object-cover" />
+        </div>
+        <div class="py-14 text-center">
+          <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+            EXPAND
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="mb-0">
+          <img src="/uploads/icf-original/partners/partner-sofia-manning.png" alt="Danmarks Førende Coachuddannelse" class="w-full h-[340px] object-cover" />
+        </div>
+        <div class="py-14 text-center">
+          <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+            SOFIA MANNING
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="mb-0">
+          <img src="/uploads/icf-original/partners/partner-grow2.png" alt="GROW2" class="w-full h-[340px] object-cover" />
+        </div>
+        <div class="py-14 text-center">
+          <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+            GROW2
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Section 4: Find din coach -->
-  <section class="max-w-[1100px] mx-auto px-6 py-10">
-    <div class="text-center">
-      <p class="text-icf-dark text-base leading-relaxed mb-6 max-w-2xl mx-auto">
-        Her finder du din coach blandt vores medlemmer. Filtrer på credential niveau, region, sprog og speciale og find den coach, der passer til dig.
-      </p>
-      <a href="/find-coach" class="inline-block bg-icf-navy text-white font-medium px-8 py-3 rounded-md text-sm hover:bg-icf-blue transition-colors">
-        Find en coach
-      </a>
-    </div>
-  </section>
-
-  <!-- Section 5: Activities -->
-  <section class="max-w-[1100px] mx-auto px-6 py-10">
-    <div class="text-center">
-      <h2 class="text-xl font-bold text-icf-navy mb-4">Se vores næste aktiviteter!</h2>
-      <a href="/aktiviteter" class="inline-block bg-icf-navy text-white font-medium px-8 py-3 rounded-md text-sm hover:bg-icf-blue transition-colors">
-        Aktiviteter
-      </a>
+  <!-- Section 4+5: Find Coach + Activities side-by-side (matches icf-chapters.org .blocs) -->
+  <section class="max-w-[1400px] mx-auto mb-10">
+    <hr class="border-icf-border mb-8" />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Find coach bloc -->
+      <div class="border border-icf-border p-8 flex flex-col justify-between">
+        <p class="text-icf-blue leading-relaxed mb-6">
+          Her finder du din coach blandt vores medlemmer. Du kan søge på credential niveau, region, sprog og speciale og find den coach, der passer til dig.
+        </p>
+        <div>
+          <a href="/find-coach" class="inline-block bg-icf-blue text-white font-medium px-8 py-4 hover:bg-icf-navy transition-colors">
+            Find en coach
+          </a>
+        </div>
+      </div>
+      <!-- Activities bloc -->
+      <div class="border border-icf-border p-8 flex flex-col justify-between">
+        <p class="text-icf-blue leading-relaxed mb-6">
+          Se vores næste aktiviteter!
+        </p>
+        <div>
+          <a href="/aktiviteter" class="inline-block bg-icf-blue text-white font-medium px-8 py-4 hover:bg-icf-navy transition-colors">
+            Aktiviteter
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 

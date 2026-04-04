@@ -60,19 +60,13 @@ export const SECTION_MAP = {
       name: "Find Coach + Activities",
       original: ".entry-content > .wrap > .blocs",
       astro: "main > section:nth-child(4)",
-      note: "On original these are side-by-side; on Astro they are separate sections (4 + 5)",
-    },
-    {
-      name: "Activities (Astro only)",
-      original: null,
-      astro: "main > section:nth-child(5)",
-      note: "Part of .blocs on original, separate section on Astro",
+      note: "Side-by-side blocs on both original and Astro",
     },
     {
       name: "Join Community CTA",
       original: null,
-      astro: "main > section:nth-child(6)",
-      note: "This section exists only on Astro — not on the original icf-chapters.org",
+      astro: "main > section:nth-child(5)",
+      note: "Astro addition — not on the original icf-chapters.org",
     },
     {
       name: "Footer",
