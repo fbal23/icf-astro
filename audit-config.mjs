@@ -63,9 +63,15 @@ export const SECTION_MAP = {
       note: "Side-by-side blocs on both original and Astro",
     },
     {
+      name: "Bottom Banner (Enjoy Great Learning)",
+      original: ".entry-content > .banner:last-child",
+      astro: "main > section:nth-child(5)",
+      note: "Enjoy Great Learning CTA — bottom banner on original site",
+    },
+    {
       name: "Join Community CTA",
       original: null,
-      astro: "main > section:nth-child(5)",
+      astro: "main > section:nth-child(6)",
       note: "Astro addition — not on the original icf-chapters.org",
     },
     {

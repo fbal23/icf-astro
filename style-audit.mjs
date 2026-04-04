@@ -178,6 +178,86 @@ async function discoverDOM(page, url, label) {
   });
 
   console.log(tree);
+
+  // ─── Upgrade 2: Map-gap detection in discovery mode ───────────────────
+  if (SECTION_MAP[pagePath]) {
+    const mappedSelectors = SECTION_MAP[pagePath]
+      .filter((s) => s.original)
+      .map((s) => s.original);
+
+    // Find top-level content sections on the page
+    const topLevelSections = await page.evaluate(() => {
+      const results = [];
+
+      // Check header
+      const header = document.querySelector("header") || document.querySelector("header#header");
+      if (header) {
+        const r = header.getBoundingClientRect();
+        results.push({ selector: `header${header.id ? "#" + header.id : ""}`, tag: "header", size: `${Math.round(r.width)}x${Math.round(r.height)}`, text: "" });
+      }
+
+      // Check main content children
+      const content = document.querySelector(".entry-content") || document.querySelector("main");
+      if (content) {
+        [...content.children].forEach((el, i) => {
+          const r = el.getBoundingClientRect();
+          if (r.height <= 10 || ["SCRIPT", "STYLE", "NOSCRIPT"].includes(el.tagName)) return;
+          const tag = el.tagName.toLowerCase();
+          const id = el.id ? `#${el.id}` : "";
+          const cls = el.className && typeof el.className === "string"
+            ? `.${el.className.trim().split(/\s+/).slice(0, 3).join(".")}`
+            : "";
+          const text = el.textContent.trim().slice(0, 60);
+          results.push({ selector: `${tag}${id}${cls}`, tag, size: `${Math.round(r.width)}x${Math.round(r.height)}`, text, index: i });
+        });
+      }
+
+      // Check footer
+      const footer = document.querySelector("footer") || document.querySelector("footer#footer");
+      if (footer) {
+        const r = footer.getBoundingClientRect();
+        results.push({ selector: `footer${footer.id ? "#" + footer.id : ""}`, tag: "footer", size: `${Math.round(r.width)}x${Math.round(r.height)}`, text: "" });
+      }
+
+      return results;
+    });
+
+    console.log(`\n--- MAP COVERAGE CHECK (${label}) ---`);
+    console.log(`Discovered ${topLevelSections.length} top-level sections`);
+    console.log(`SECTION_MAP has ${mappedSelectors.length} original selectors for "${pagePath}"\n`);
+
+    // Check which discovered sections match a mapped selector
+    for (const sec of topLevelSections) {
+      const mapped = mappedSelectors.some((sel) => sec.selector.includes(sel.replace(/[^a-zA-Z0-9#.]/g, "")) || sel.includes(sec.selector));
+      // Try matching by checking if the element is found by any mapped selector
+      const matchedBySelector = await page.evaluate(
+        ({ selectors, secSelector }) => {
+          for (const sel of selectors) {
+            const el = document.querySelector(sel);
+            if (!el) continue;
+            // Check if this selector's element matches our discovered section
+            const tag = el.tagName.toLowerCase();
+            const id = el.id ? `#${el.id}` : "";
+            const cls = el.className && typeof el.className === "string"
+              ? `.${el.className.trim().split(/\s+/).slice(0, 3).join(".")}`
+              : "";
+            if (secSelector.includes(tag + id) || secSelector.includes(cls.split(".")[1] || "NOMATCH")) {
+              return sel;
+            }
+          }
+          return null;
+        },
+        { selectors: mappedSelectors, secSelector: sec.selector }
+      );
+
+      const status = matchedBySelector ? "MAPPED" : "UNMAPPED";
+      const marker = matchedBySelector ? "" : " <<< ADD TO SECTION_MAP";
+      console.log(`  [${status}] <${sec.selector}> ${sec.size} "${sec.text.slice(0, 40)}"${marker}`);
+    }
+
+    console.log("");
+  }
+
   console.log(`=== END DISCOVERY [${label}] ===\n`);
 }
 
@@ -253,6 +333,99 @@ async function auditPage(browser, pagePath) {
   let totalDiffs = 0;
   let criticalDiffs = 0;
   const diffDetails = [];
+
+  // ─── Upgrade 1: Coverage gate — detect unmapped sections ────────────────
+  let astroSectionCount = 0;
+  const mappedOrigCount = sections.filter((s) => s.original !== null).length;
+
+  if (!astroOnly && originalPage) {
+    // Verify each mapped original selector actually exists on the page
+    const missingSelectorCount = await originalPage.evaluate((selectors) => {
+      let missing = 0;
+      for (const sel of selectors) {
+        if (!document.querySelector(sel)) missing++;
+      }
+      return missing;
+    }, sections.filter((s) => s.original).map((s) => s.original));
+
+    // Count ALL visible content sections on the original (at all nesting levels)
+    // by finding elements that match the structural pattern: banners, wraps, cols, blocs, etc.
+    const origContentSections = await originalPage.evaluate(() => {
+      const content = document.querySelector(".entry-content");
+      if (!content) return [];
+      const sections = [];
+
+      function findVisibleSections(parent, prefix) {
+        [...parent.children].forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          if (rect.height <= 50 || ["SCRIPT", "STYLE", "NOSCRIPT", "HR"].includes(el.tagName)) return;
+          const tag = el.tagName.toLowerCase();
+          const cls = el.className && typeof el.className === "string"
+            ? el.className.trim().split(/\s+/).slice(0, 3).join(".")
+            : "";
+          const desc = `${tag}${cls ? "." + cls : ""} (${Math.round(rect.width)}x${Math.round(rect.height)})`;
+          const text = el.textContent.trim().slice(0, 50);
+
+          // If this is a wrapper (.wrap), recurse into its children
+          if (cls.includes("wrap") && !cls.includes("banner")) {
+            findVisibleSections(el, prefix + "  ");
+          } else {
+            sections.push({ desc, text });
+          }
+        });
+      }
+
+      findVisibleSections(content, "");
+      return sections;
+    });
+
+    // Add header + footer
+    const hasHeader = await originalPage.evaluate(() => !!document.querySelector("header#header"));
+    const hasFooter = await originalPage.evaluate(() => !!document.querySelector("footer#footer"));
+    const origTotal = origContentSections.length + (hasHeader ? 1 : 0) + (hasFooter ? 1 : 0);
+
+    console.log(`--- COVERAGE CHECK ---`);
+    console.log(`Original content sections (unwrapped): ${origContentSections.length}`);
+    for (const s of origContentSections) {
+      console.log(`  - ${s.desc}: "${s.text.slice(0, 40)}"`);
+    }
+    console.log(`+ header/footer: ${origTotal} total`);
+    console.log(`SECTION_MAP original selectors: ${mappedOrigCount}`);
+
+    if (origTotal !== mappedOrigCount) {
+      console.log(`\nCOVERAGE GAP: Original has ${origTotal} sections but SECTION_MAP maps ${mappedOrigCount}`);
+      console.log(`Run --discover to find unmapped sections\n`);
+      criticalDiffs++;
+      totalDiffs++;
+      diffDetails.push({
+        section: "COVERAGE",
+        type: "gap",
+        diffs: [`Original has ${origTotal} sections but only ${mappedOrigCount} are mapped`],
+      });
+    } else {
+      console.log(`COVERAGE OK: ${origTotal} original sections, ${mappedOrigCount} mapped\n`);
+    }
+
+    if (missingSelectorCount > 0) {
+      console.log(`WARNING: ${missingSelectorCount} mapped selector(s) not found on original site — selectors may be stale\n`);
+    }
+  }
+
+  // Count Astro sections for bidirectional check (Upgrade 3)
+  astroSectionCount = await astroPage.evaluate(() => {
+    const main = document.querySelector("main");
+    if (!main) return 0;
+    return [...main.children].filter((el) => {
+      const rect = el.getBoundingClientRect();
+      return (
+        rect.height > 10 &&
+        !["SCRIPT", "STYLE", "NOSCRIPT"].includes(el.tagName)
+      );
+    }).length;
+  });
+  const astroHasHeader = await astroPage.evaluate(() => !!document.querySelector("header"));
+  const astroHasFooter = await astroPage.evaluate(() => !!document.querySelector("footer"));
+  const astroTotal = astroSectionCount + (astroHasHeader ? 1 : 0) + (astroHasFooter ? 1 : 0);
 
   for (const section of sections) {
     console.log(`--- SECTION: ${section.name} ---`);
@@ -366,6 +539,37 @@ async function auditPage(browser, pagePath) {
       diffs.push(`images: original ${origData.images.length} → astro ${astroData.images.length}`);
     }
 
+    // Upgrade 4: Content fingerprint — compare headings and link count
+    const origHeadings = await originalPage.evaluate((sel) => {
+      const el = document.querySelector(sel);
+      if (!el) return [];
+      return [...el.querySelectorAll("h1,h2,h3,h4,h5,h6")].map((h) =>
+        h.textContent.trim().slice(0, 100)
+      );
+    }, section.original);
+    const astroHeadings = await astroPage.evaluate((sel) => {
+      const el = document.querySelector(sel);
+      if (!el) return [];
+      return [...el.querySelectorAll("h1,h2,h3,h4,h5,h6")].map((h) =>
+        h.textContent.trim().slice(0, 100)
+      );
+    }, section.astro);
+
+    if (origHeadings.length !== astroHeadings.length) {
+      diffs.push(`headings: original has ${origHeadings.length} (${origHeadings.join(", ")}) → astro has ${astroHeadings.length} (${astroHeadings.join(", ")})`);
+    } else {
+      for (let hi = 0; hi < origHeadings.length; hi++) {
+        if (origHeadings[hi] !== astroHeadings[hi]) {
+          diffs.push(`heading[${hi}]: original "${origHeadings[hi]}" → astro "${astroHeadings[hi]}"`);
+        }
+      }
+    }
+
+    // Link count diff
+    if (Math.abs(origData.links.length - astroData.links.length) > 1) {
+      diffs.push(`links: original ${origData.links.length} → astro ${astroData.links.length}`);
+    }
+
     if (diffs.length > 0) {
       console.log(`  DIFFS (fix Astro to match original):`);
       for (const d of diffs) {
@@ -384,14 +588,26 @@ async function auditPage(browser, pagePath) {
     console.log("");
   }
 
-  // Summary
-  console.log(`${"=".repeat(50)}`);
+  // ─── Upgrade 3: Bidirectional section count summary ──────────────────────
+  console.log(`${"=".repeat(60)}`);
   console.log(`SUMMARY: ${pagePath}`);
   console.log(`Reference: ${originalUrl}`);
-  console.log(`${"=".repeat(50)}`);
-  console.log(`Sections audited:  ${sections.length}`);
-  console.log(`Total diffs:       ${totalDiffs}`);
-  console.log(`Critical diffs:    ${criticalDiffs}`);
+  console.log(`${"=".repeat(60)}`);
+  console.log(`Sections audited:       ${sections.length}`);
+  console.log(`Total diffs:            ${totalDiffs}`);
+  console.log(`Critical diffs:         ${criticalDiffs}`);
+
+  if (!astroOnly) {
+    console.log(`\n--- SECTION COUNT PARITY ---`);
+    console.log(`SECTION_MAP entries:    ${sections.length} (${mappedOrigCount} with original selector)`);
+    console.log(`Astro top-level:        ${astroTotal}`);
+
+    if (astroTotal < mappedOrigCount) {
+      console.log(`STATUS: INCOMPLETE — Astro has fewer sections (${astroTotal}) than mapped originals (${mappedOrigCount}) — content likely missing`);
+    } else {
+      console.log(`STATUS: Section counts align`);
+    }
+  }
 
   if (diffDetails.length > 0) {
     console.log(`\nACTION ITEMS (make Astro match the original):`);
@@ -399,6 +615,8 @@ async function auditPage(browser, pagePath) {
     for (const d of diffDetails) {
       if (d.type === "missing") {
         console.log(`  ${i}. [${d.section}] Element not found on ${d.site} (selector: ${d.selector})`);
+      } else if (d.type === "gap") {
+        console.log(`  ${i}. [${d.section}] ${d.diffs[0]}`);
       } else {
         for (const diff of d.diffs) {
           console.log(`  ${i}. [${d.section}] ${diff}`);
