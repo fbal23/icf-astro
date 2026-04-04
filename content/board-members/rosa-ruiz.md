@@ -1,6 +1,6 @@
 ---
 name: "Rosa Ruiz de la Torre PCC"
 title: "Bestyrelsesmedlem"
-photo: "/uploads/icf-original/leadership/rosa-ruiz.png"
+photo: "/uploads/board/rosa-ruiz.jpg"
 order: 7
 ---

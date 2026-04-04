@@ -1,6 +1,6 @@
 ---
 name: "Jacqui Moller Larsen ACC"
 title: "Bestyrelsesmedlem"
-photo: "/uploads/icf-original/leadership/jacqui-larsen.png"
+photo: "/uploads/board/jacqui-larsen.jpg"
 order: 6
 ---

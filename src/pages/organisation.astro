@@ -23,16 +23,38 @@ const members = (await getCollection("boardMember")).sort(
       {members.map((member) => (
         <div class="text-center">
           <img
-            src={member.data.photo || "/uploads/icf-original/leadership/placeholder.png"}
+            src={member.data.photo || "/uploads/board/placeholder.jpg"}
             alt={member.data.name}
             class="w-40 h-40 object-cover rounded-lg mx-auto mb-4"
           />
           <h3 class="text-lg font-bold text-icf-navy">{member.data.name}</h3>
           <p class="text-sm text-icf-excerpt">{member.data.title}</p>
-          <a href="#" class="text-sm text-icf-blue hover:text-icf-accent">Læs mere →</a>
+          {member.body && member.body.trim().length > 0 && (
+            <a href={`#bio-${member.id}`} class="text-sm text-icf-blue hover:text-icf-accent">Læs mere ↓</a>
+          )}
         </div>
       ))}
     </div>
+
+    <!-- Detailed bios -->
+    {members.filter(m => m.body && m.body.trim().length > 0).length > 0 && (
+      <h2 class="text-[28px] font-bold text-icf-navy mb-8 pb-4 border-b border-icf-border">Mød bestyrelsen</h2>
+    )}
+
+    {members.filter(m => m.body && m.body.trim().length > 0).map((member) => (
+      <div id={`bio-${member.id}`} class="flex flex-col md:flex-row gap-6 mb-12 pb-8 border-b border-icf-border last:border-0">
+        <img
+          src={member.data.photo || "/uploads/board/placeholder.jpg"}
+          alt={member.data.name}
+          class="w-32 h-32 object-cover rounded-lg flex-shrink-0"
+        />
+        <div>
+          <h3 class="text-xl font-bold text-icf-navy">{member.data.name}</h3>
+          <p class="text-sm text-icf-accent font-medium mb-3">{member.data.title}</p>
+          <div class="text-sm text-icf-dark leading-relaxed prose prose-sm" set:html={member.body} />
+        </div>
+      </div>
+    ))}
 
     <!-- Komitéer og Netværk -->
     <h2 class="text-[28px] font-bold text-icf-navy mb-8 pb-4 border-b border-icf-border">Komitéer og Netværk</h2>

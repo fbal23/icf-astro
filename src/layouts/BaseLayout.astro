@@ -35,7 +35,14 @@ const nav = [
       { href: "/medlemsfordele", label: "Medlemsfordele" },
     ],
   },
-  { href: "/find-coach", label: "Find en Coach" },
+  {
+    href: "/find-coach", label: "Find en Coach",
+    children: [
+      { href: "/hvorfor-vaelge-en-icf-coach", label: "Hvorfor vælge en ICF coach?" },
+      { href: "/acc-pcc-mcc", label: "Hvad er ACC, PCC og MCC?" },
+      { href: "/find-coach", label: "Søg efter en coach" },
+    ],
+  },
 ];
 ---
 
@@ -143,15 +150,38 @@ const nav = [
       <slot />
     </main>
 
-    <!-- Footer — matches WordPress original -->
-    <footer class="bg-icf-navy mt-20">
+    <!-- Newsletter signup -->
+    <section class="bg-icf-bone py-12">
+      <div class="max-w-[600px] mx-auto px-6 text-center">
+        <h3 class="text-xl font-bold text-icf-navy mb-3">Tilmeld nyhedsbrev</h3>
+        <p class="text-sm text-icf-dark mb-6">Få nyheder om events, netværk og coaching i Danmark direkte i din indbakke.</p>
+        <form class="flex flex-col sm:flex-row gap-3" id="newsletter-form">
+          <input
+            type="email"
+            name="email"
+            placeholder="Din e-mail"
+            required
+            class="flex-1 px-4 py-3 rounded border border-gray-300 text-sm focus:outline-none focus:border-icf-blue"
+          />
+          <button
+            type="submit"
+            class="bg-icf-navy text-white px-6 py-3 rounded text-sm font-medium hover:bg-icf-blue transition-colors"
+          >
+            Tilmeld
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-icf-navy mt-0">
       <div class="max-w-[900px] mx-auto px-6 py-20 text-center">
         <h3 class="text-white font-bold text-sm tracking-wider uppercase mb-6">ICF CHAPTER DANMARK</h3>
         <p class="text-icf-bone text-sm mb-6 max-w-2xl mx-auto leading-relaxed">
           ICF Denmark er en lokal afdeling af International Coach Federation der er en verdensomspændende interesseorganisation indenfor professionel coaching. ICF Danmark har egne vedtægter, bestyrelse og præsident vedtaget og valgt af ICF Danmarks medlemmer på det årlige medlemsmøde.
         </p>
         <p class="text-icf-bone text-sm mb-6">
-          E-mail: <a href="mailto:kontakt@coachingfederation.dk" class="text-icf-accent hover:text-white underline">kontakt@coachingfederation.dk</a>
+          E-mail: <a href="mailto:sekretaer@coachingfederation.dk" class="text-icf-accent hover:text-white underline">sekretaer@coachingfederation.dk</a>
         </p>
         <div class="flex justify-center gap-4 text-icf-bone text-sm mb-10">
           <a href="https://facebook.com" class="hover:text-white transition-colors">Facebook</a>
@@ -159,6 +189,7 @@ const nav = [
         </div>
         <div class="border-t border-white/10 pt-8 text-sm text-icf-bone">
           <p>&copy; {new Date().getFullYear()} ICF Chapter Danmark</p>
+          <p class="mt-2"><a href="/privatlivspolitik" class="text-icf-bone/60 hover:text-white underline text-xs">Privatlivspolitik</a></p>
         </div>
       </div>
     </footer>

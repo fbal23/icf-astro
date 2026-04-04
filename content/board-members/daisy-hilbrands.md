@@ -1,6 +1,6 @@
 ---
 name: "Daisy Hilbrands ACC"
 title: "Bestyrelsesmedlem"
-photo: "/uploads/icf-original/leadership/daisy-hilbrands.png"
+photo: "/uploads/board/daisy-hilbrands.jpg"
 order: 4
 ---

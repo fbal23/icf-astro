@@ -1,6 +1,6 @@
 ---
 name: "Tanja Juul Sondrup"
 title: "Suppleant"
-photo: "/uploads/icf-original/leadership/tanja-sondrup.png"
+photo: "/uploads/board/tanja-sondrup.jpg"
 order: 9
 ---

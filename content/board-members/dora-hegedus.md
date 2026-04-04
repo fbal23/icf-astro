@@ -1,6 +1,6 @@
 ---
 name: "Dora Hegedus MCC"
 title: "Præsident"
-photo: "/uploads/icf-original/leadership/dora-hegedus.png"
+photo: "/uploads/board/dora-hegedus.jpg"
 order: 1
 ---
