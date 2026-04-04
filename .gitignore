@@ -27,7 +27,6 @@ pnpm-debug.log*
 screenshots/
 
 # dev-only files
-compare.mjs
 wp-pages-content.md
 
 # Tina generated
