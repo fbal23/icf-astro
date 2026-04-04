@@ -15,7 +15,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   </section>
 
   <!-- Section 2: Two-column layout — About + News (matches icf-chapters.org) -->
-  <section class="max-w-[1400px] mx-auto mt-10 mb-14">
+  <section style="max-width:1400px;margin:40px auto 55px">
     <div class="grid grid-cols-1 md:grid-cols-2">
 
       <!-- Left column: ICF Danmark About -->
@@ -61,44 +61,42 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </section>
 
-  <!-- Section 3: Akkrediterede uddannelsesudbydere (matches icf-chapters.org card layout) -->
-  <section class="max-w-[1400px] mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Section 3: Akkrediterede uddannelsesudbydere (matches icf-chapters.org .news.nb3 — 3 direct children) -->
+  <section style="max-width:1400px;margin:0 auto" class="flex flex-col md:flex-row">
+    <div class="flex-1">
       <div>
-        <div class="mb-0">
-          <img src="/uploads/icf-original/partners/partner-expand.png" alt="EXPAND Coachuddannelse" class="w-full h-[340px] object-cover" />
-        </div>
-        <div class="py-14 text-center">
-          <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
-            EXPAND
-          </a>
-        </div>
+        <img src="/uploads/icf-original/partners/partner-expand.png" alt="EXPAND Coachuddannelse" class="w-full h-[340px] object-cover" />
       </div>
-      <div>
-        <div class="mb-0">
-          <img src="/uploads/icf-original/partners/partner-sofia-manning.png" alt="Danmarks Førende Coachuddannelse" class="w-full h-[340px] object-cover" />
-        </div>
-        <div class="py-14 text-center">
-          <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
-            SOFIA MANNING
-          </a>
-        </div>
+      <div class="py-[74px] text-center">
+        <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+          EXPAND
+        </a>
       </div>
+    </div>
+    <div class="flex-1">
       <div>
-        <div class="mb-0">
-          <img src="/uploads/icf-original/partners/partner-grow2.png" alt="GROW2" class="w-full h-[340px] object-cover" />
-        </div>
-        <div class="py-14 text-center">
-          <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
-            GROW2
-          </a>
-        </div>
+        <img src="/uploads/icf-original/partners/partner-sofia-manning.png" alt="Danmarks Førende Coachuddannelse" class="w-full h-[340px] object-cover" />
+      </div>
+      <div class="py-[74px] text-center">
+        <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+          SOFIA MANNING
+        </a>
+      </div>
+    </div>
+    <div class="flex-1">
+      <div>
+        <img src="/uploads/icf-original/partners/partner-grow2.png" alt="GROW2" class="w-full h-[340px] object-cover" />
+      </div>
+      <div class="py-[74px] text-center">
+        <a href="#" class="inline-block bg-icf-blue text-white font-medium px-10 py-4 hover:bg-icf-navy transition-colors">
+          GROW2
+        </a>
       </div>
     </div>
   </section>
 
   <!-- Section 4+5: Find Coach + Activities side-by-side (matches icf-chapters.org .blocs) -->
-  <section class="max-w-[1400px] mx-auto mb-10">
+  <section style="max-width:1400px;margin:0 auto 40px">
     <hr class="border-icf-border mb-8" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Find coach bloc -->
