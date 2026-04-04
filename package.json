@@ -10,7 +10,10 @@
     "dev:astro": "astro dev",
     "build": "if [ -n \"$TINA_CLIENT_ID\" ]; then tinacms build && astro build; else astro build; fi",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "audit": "node style-audit.mjs",
+    "audit:discover": "node style-audit.mjs --discover",
+    "audit:screenshots": "node section-screenshots.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.0",
